@@ -1,10 +1,12 @@
-import WebServ.Server
-import WebServ.WebController
+from WebServ import Server
+from WebServ.WebController import C_WebController
 import os
+import time
+
 
 if __name__ == "__main__":
     if not os.path.exists("Data"):
         os.makedirs("Data")
 
-    controller = WebServ.WebController.C_WebController()
-    WebServ.Server.start_app()
+    controller = C_WebController()
+    Server.start_app()

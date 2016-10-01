@@ -1,8 +1,7 @@
-from flask import Flask, request, make_response
-import WebController
+from flask import *
+from WebController import C_WebController
 app = Flask(__name__)
 
-controller = WebController.getInstance()
 
 def start_app(_debug=False):
     app.debug = 1 if _debug else 0
@@ -11,7 +10,7 @@ def start_app(_debug=False):
 
 @app.route('/', methods=['GET'])
 def home():
-    return "Home Page " + request.path
+    return render_template("home.html")
 
 
 @app.route('/test', methods=['POST'])

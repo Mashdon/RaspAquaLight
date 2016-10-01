@@ -1,25 +1,20 @@
-try:
-    import cPickle as pickle
-except:
-    import pickle
+from WebModel import C_WebModel
 
-import WebModel
-
-
-
-instance_WebController = None
-
-
-def getInstance():
-    global instance_WebController
-    if instance_WebController is None:
-        instance_WebController = C_WebController()
-    return instance_WebController
 
 class C_WebController:
+    instance_WebController = None
+
+    @staticmethod
+    def getInstance():
+        C_WebController.instance_WebController
+        if C_WebController.instance_WebController is None:
+            C_WebController.instance_WebController = C_WebController()
+        return C_WebController.instance_WebController
 
     def __init__(self):
-        self.model = WebModel.C_WebModel()
+        self.model = C_WebModel()
         self.model.load()
+
+
 
 

@@ -3,8 +3,8 @@ from flask import Flask, request, make_response
 app = Flask(__name__)
 
 
-def start_app():
-    app.debug = 1
+def start_app(debug=False):
+    app.debug = 1 if debug else 0
     app.run()
 
 

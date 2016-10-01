@@ -3,12 +3,21 @@ try:
 except:
     import pickle
 
-class WebModel:
+
+class C_WebModel:
 
     modelFilename = "Data/WebModel.data"
 
+
+
     def __init__(self):
         self.switchOn = False
+
+
+
+
+
+    ############################################################################
 
     def load(self):
         try:

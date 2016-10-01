@@ -1,10 +1,11 @@
 from flask import Flask, request, make_response
-
+import WebController
 app = Flask(__name__)
 
+controller = WebController.getInstance()
 
-def start_app(debug=False):
-    app.debug = 1 if debug else 0
+def start_app(_debug=False):
+    app.debug = 1 if _debug else 0
     app.run()
 
 

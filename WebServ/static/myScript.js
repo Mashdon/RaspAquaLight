@@ -1,1 +1,7 @@
-var i = 0;
+$(function() {
+    $("#btn-test").click(function(){
+        alert('Hey');
+    });
+
+
+});

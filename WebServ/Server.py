@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 def start_app(_debug=False):
     app.debug = 1 if _debug else 0
-    app.run()
+    app.run(host="0.0.0.0")
 
 
 @app.route('/', methods=['GET'])
@@ -20,6 +20,6 @@ def test():
 
 @app.errorhandler(404)
 def page_not_found(error):
-    response = make_response("Tu sembles perdu...", 404)
+    response = make_response("404", 404)
     return response
 

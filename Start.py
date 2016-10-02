@@ -8,5 +8,5 @@ if __name__ == "__main__":
     if not os.path.exists("Data"):
         os.makedirs("Data")
 
-    controller = C_WebController()
+    controller = C_WebController.getInstance()
     Server.start_app()

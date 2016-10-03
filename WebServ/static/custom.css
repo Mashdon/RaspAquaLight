@@ -1,0 +1,16 @@
+.top5 { margin-top:5px; }
+.top7 { margin-top:7px; }
+.top10 { margin-top:10px; }
+.top15 { margin-top:15px; }
+.top17 { margin-top:17px; }
+.top30 { margin-top:30px; }
+
+.well-info { background: repeating-linear-gradient(45deg, #428bca, #428bca 10px, #eeeeee 10px, #eeeeee 20px);}
+
+.square { height: 128px; border: solid 1px;}
+
+.input-group-addon-30 {
+    min-width:40px;// if you want width please write here //
+    text-align:left;
+}
+

@@ -13,9 +13,9 @@ def home():
     return render_template("home.html")
 
 
-@app.route('/test', methods=['POST'])
-def test():
-    return home()
+@app.route('/StartTest', methods=['POST'])
+def start_test():
+    return ""
 
 
 @app.errorhandler(404)

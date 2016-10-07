@@ -1,7 +1,6 @@
 from WebServ import Server
 from WebServ.WebController import C_WebController
 import os
-import time
 
 
 if __name__ == "__main__":
@@ -9,4 +8,4 @@ if __name__ == "__main__":
         os.makedirs("Data")
 
     controller = C_WebController.getInstance()
-    Server.start_app()
+    Server.start_app(_debug=False)

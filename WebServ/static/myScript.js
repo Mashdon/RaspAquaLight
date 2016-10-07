@@ -35,7 +35,7 @@ $(function() {
 
             setTimeout(function() {
                 $("#btn-test").attr("disabled", false);
-            }, (durationTest * 1000) + 1);
+            }, (durationTest + 1) * 1000);
 
 
 

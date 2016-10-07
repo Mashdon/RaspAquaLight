@@ -22,7 +22,7 @@ def start_test():
     return ""
 
 
-@app.route('/AddPhase', methods=['GET'])
+@app.route('/AddPhase', methods=['POST'])
 def add_phase():
     #TODO faire l'ajout de phase
     return get_phase(5)

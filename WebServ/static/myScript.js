@@ -37,10 +37,24 @@ $(function() {
                 $("#btn-test").attr("disabled", false);
             }, (durationTest + 1) * 1000);
 
-
-
         }
     });
+
+    $("#btn-add-phase").click(function () {
+        $.ajax({
+            url: '/AddPhase',
+            type: 'post',
+            async: false,
+            success: function (response) {
+                $("#phases").append(response);
+            },
+            error: function () {
+                alert("bouh");
+            }
+        });
+
+    });
+
 
 
 });

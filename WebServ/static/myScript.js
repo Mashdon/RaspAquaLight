@@ -8,6 +8,34 @@
 // Functions
 
 
+function rgbToHex(red, green, blue) {
+    var rgb = blue | (green << 8) | (red << 16);
+    return '#' + (0x1000000 + rgb).toString(16).slice(1)
+}
+
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
+function syncRGB(hex) {
+    var rgb = hexToRgb(hex);
+
+    $("#html-color-picker").val(hex);
+
+    $("#square-visu").css("background-color", hex);
+
+    $("#r-color-picker").val(rgb.r);
+    $("#g-color-picker").val(rgb.g);
+    $("#b-color-picker").val(rgb.b);
+
+    //TODO if visu then send ajax
+
+}
 
 /*
 --------------------------
@@ -103,6 +131,30 @@ $(function() {
     $("#checkbox-visu").trigger("change");
 
 
+
+    $("#html-color-picker").on("input", function(){
+
+        //TODO select bonne phase si besoin
+        syncRGB($(this).val());
+    });
+
+
+    $(".rgb-picker").change(function () {
+        var hex = rgbToHex($("#r-color-picker").val(), $("#g-color-picker").val(), $("#b-color-picker").val());
+        syncRGB(hex);
+    });
+
+
+    $("#button-picker-ok").click(function () {
+        var hex = $("#html-color-picker").val();
+        var rgb = hexToRgb(hex);
+        var num_phase = 1;
+        if (num_phase > 0) {
+            $(".r-display[data-phase-number=" + num_phase + "]").html(('000' + rgb.r).substr(-3));
+            $(".g-display[data-phase-number=" + num_phase + "]").html(('000' + rgb.g).substr(-3));
+            $(".b-display[data-phase-number=" + num_phase + "]").html(('000' + rgb.b).substr(-3));
+        }
+    });
 
 
 

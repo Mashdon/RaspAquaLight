@@ -10,7 +10,34 @@
 .square { height: 128px; border: solid 1px;}
 
 .input-group-addon-30 {
-    min-width:40px;// if you want width please write here //
+    min-width:40px;
     text-align:left;
 }
 
+
+/* FLASHING */
+
+@-webkit-keyframes flash {
+  0%, 100%, 50% {
+    opacity: 1;
+  }
+
+  25%, 75% {
+    opacity: 0;
+  }
+}
+
+@keyframes flash {
+  0%, 100%, 50% {
+    opacity: 1;
+  }
+
+  25%, 75% {
+    opacity: 0;
+  }
+}
+
+.flash-animated {
+    -webkit-animation: flash 2s ease infinite;
+    animation: flash 2s ease infinite;
+}

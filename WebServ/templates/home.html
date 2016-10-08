@@ -20,7 +20,8 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6 col-md-offset-1">
-            <div class="panel panel-default">
+
+            <div class="panel panel-default" id="panel-left">
                 <!-- LEFT PANEL  -->
                 <div class="panel-heading">
                     <h2 class="panel-title">
@@ -62,7 +63,7 @@
 
                     <div class="row top10">
                         <div class="col-md-12">
-                            <button type="button" class="btn btn-danger">Annuler</button>
+                            <button type="button" class="btn btn-danger" id="button-cancel-phase">Annuler</button>
                             <button type="button" class="btn btn-success">Sauvegarder</button>
                         </div>
 
@@ -78,7 +79,7 @@
 
         <!-- RIGHT PANEL  -->
         <div class="col-md-4">
-            <div class="panel panel-primary">
+            <div class="panel panel-default" id="panel-right">
 
                 <div class="panel-heading">
                     <h2 class="panel-title">
@@ -89,7 +90,8 @@
                 <div class="panel-body">
                     <div class="input-group">
                         <span class="input-group-addon">Visualiser</span>
-                        <input type="checkbox" data-toggle="toggle" class="form-control">
+                        <input type="checkbox" data-toggle="toggle" class="form-control" id="checkbox-visu" data-onstyle="danger"
+                               data-on='<span class="glyphicon glyphicon-exclamation-sign flash-animated" aria-hidden="true"></span> On' data-off="Off">
 
                     </div>
                     <hr>

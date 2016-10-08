@@ -17,7 +17,10 @@
 $(function() {
 
 
+    // TEST DE LA PROGRAMATION
     $("#btn-test").click(function(){
+        $('#checkbox-visu').prop('checked', false);
+        $("#checkbox-visu").trigger("change");
 
         var durationTest = $("#number-test").val();
         if (!isNaN(durationTest)){
@@ -40,34 +43,25 @@ $(function() {
         }
     });
 
+    // AJOUT DE PHASE
     $("#btn-add-phase").click(function () {
         $.ajax({
-            url: '/AddPhase',
-            type: 'post',
+            url: '/GetNewPhase/' + 3,
+            type: 'get',
             async: false,
             success: function (response) {
                 $("#phases").append(response);
             },
             error: function () {
-                alert("bouh");
+                alert("");
             }
         });
 
     });
 
+    // SUPPRIMER UNE PHASE
     $('body').on("click", ".button-remove-phase", function () {
         var num_remove = $(this).attr("data-phase-number");
-
-        //TODO ask confirmation
-
-        $.ajax({
-            url: '/RemovePhase',
-            data: {
-                num: num_remove
-            },
-            type: 'post',
-            dataType: 'json'
-        });
 
         $("div[data-phase-number=" + num_remove + "]").remove();
 
@@ -82,6 +76,33 @@ $(function() {
             $(this).find("[data-phase-number]").attr("data-phase-number", new_num);
         });
     });
+
+
+    $("#button-cancel-phase").click(function () {
+        $.ajax({
+            url: '/GetAllPhases',
+            type: 'get',
+            success: function (response) {
+                $("#phases").html(response);
+            },
+            async: false
+        });
+    });
+
+
+    $("#checkbox-visu").change(function () {
+        if (this.checked){
+            $("#panel-right").removeClass("panel-default").addClass("panel-danger");
+            $("#panel-left").removeClass("panel-primary").addClass("panel-default");
+        } else {
+            $("#panel-left").removeClass("panel-default").addClass("panel-primary");
+            $("#panel-right").removeClass("panel-danger").addClass("panel-default");
+        }
+
+    });
+    $("#checkbox-visu").trigger("change");
+
+
 
 
 

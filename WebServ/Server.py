@@ -10,9 +10,7 @@ def start_app(_debug=False):
 
 @app.route('/', methods=['GET'])
 def home():
-    phases = ""
-    for i in xrange(1, 3):
-        phases += get_phase(i)
+    phases = get_all_phases()
     return render_template("home.html", phases=phases)
 
 
@@ -22,20 +20,22 @@ def start_test():
     return ""
 
 
-@app.route('/AddPhase', methods=['POST'])
-def add_phase():
-    #TODO faire l'ajout de phase
-    return get_phase(3)
+@app.route('/GetAllPhases', methods=['GET'])
+def get_all_phases():
+    phases = ""
+    for i in xrange(1, 5):
+        phases += get_phase(i)
+    return phases
 
 
-@app.route('/RemovePhase', methods=['POST'])
-def remove_phase():
-    num = request.form["num"]
-    #TODO faire la suppression de phase
-    return ""
+@app.route('/GetNewPhase/<int:_num_phase>', methods=['GET'])
+def get_new_phase(_num_phase):
+    return get_phase(_num_phase, fetch=False)
 
 
-def get_phase(_num_phase):
+def get_phase(_num_phase, fetch=True):
+    #TODO fetch informations
+
     return render_template("phase.html", num_phase=_num_phase)
 
 

@@ -55,6 +55,34 @@ $(function() {
 
     });
 
+    $('body').on("click", ".button-remove-phase", function () {
+        var num_remove = $(this).attr("data-phase-number");
+
+        //TODO ask confirmation
+
+        $.ajax({
+            url: '/RemovePhase',
+            data: {
+                num: num_remove
+            },
+            type: 'post',
+            dataType: 'json'
+        });
+
+        $("div[data-phase-number=" + num_remove + "]").remove();
+
+        $("div.div-phase").filter(function(){
+            return $(this).attr("data-phase-number") > num_remove;
+
+        }).each(function(){
+            var new_num = $(this).attr("data-phase-number") - 1;
+
+            $(this).attr("data-phase-number",new_num);
+            $(this).find("strong.phase_number").html(new_num);
+            $(this).find("[data-phase-number]").attr("data-phase-number", new_num);
+        });
+    });
+
 
 
 });

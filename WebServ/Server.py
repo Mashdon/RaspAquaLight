@@ -25,7 +25,14 @@ def start_test():
 @app.route('/AddPhase', methods=['POST'])
 def add_phase():
     #TODO faire l'ajout de phase
-    return get_phase(5)
+    return get_phase(3)
+
+
+@app.route('/RemovePhase', methods=['POST'])
+def remove_phase():
+    num = request.form["num"]
+    #TODO faire la suppression de phase
+    return ""
 
 
 def get_phase(_num_phase):

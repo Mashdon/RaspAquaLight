@@ -1,6 +1,6 @@
 // Var
 
-
+allowSendManual = false
 /*
 --------------------------
 --------------------------
@@ -33,8 +33,37 @@ function syncRGB(hex) {
     $("#g-color-picker").val(rgb.g);
     $("#b-color-picker").val(rgb.b);
 
-    //TODO if visu then send ajax
+    if ($("#checkbox-visu").is(":checked")){
+        sendManual(true, rgb.r, rgb.g, rgb.b);
+    }
+}
 
+function sendManual(boo, r, g, b){
+    if (allowSendManual) {
+        if (typeof(r) === 'undefined') r = 0;
+        if (typeof(g) === 'undefined') g = 0;
+        if (typeof(b) === 'undefined') b = 0;
+        $.ajax({
+            url: '/SetManual',
+            data: {
+                isManual: boo,
+                r: r,
+                g: g,
+                b: b
+            },
+            type: 'post',
+            dataType: 'json'
+        });
+    }
+}
+
+function clearEdit(){
+    $("div.well-phase").each(function() {
+        $(this).removeClass("well-info");
+    });
+
+    $(".button-phase-edit").attr("disabled", false);
+    $("#bottom-edit").removeAttr("data-phase-number").fadeOut();
 }
 
 /*
@@ -43,6 +72,11 @@ function syncRGB(hex) {
  */
 // Main
 $(function() {
+
+    syncRGB(rgbToHex(
+        $("#span-manual").attr("data-manual-r"),
+        $("#span-manual").attr("data-manual-g"),
+        $("#span-manual").attr("data-manual-b")));
 
 
     // TEST DE LA PROGRAMATION
@@ -73,8 +107,9 @@ $(function() {
 
     // AJOUT DE PHASE
     $("#btn-add-phase").click(function () {
+        var nb_phases = $(".div-phase").length;
         $.ajax({
-            url: '/GetNewPhase/' + 3,
+            url: '/GetNewPhase/' + (nb_phases + 1),
             type: 'get',
             async: false,
             success: function (response) {
@@ -90,8 +125,10 @@ $(function() {
     // SUPPRIMER UNE PHASE
     $('body').on("click", ".button-remove-phase", function () {
         var num_remove = $(this).attr("data-phase-number");
-
-        $("div[data-phase-number=" + num_remove + "]").remove();
+        if (num_remove == $("#bottom-edit").attr("data-phase-number")){
+            clearEdit();
+        }
+        $("div.div-phase[data-phase-number=" + num_remove + "]").remove();
 
         $("div.div-phase").filter(function(){
             return $(this).attr("data-phase-number") > num_remove;
@@ -117,24 +154,39 @@ $(function() {
         });
     });
 
+    $("#button-save-phase").click(function(){
+        $.ajax({
+            url: '/SavePhases',
+            data: {},
+            type: 'post',
+            dataType: 'json',
+        });
+
+        $("#glyph-save").show();
+        setTimeout(function () {
+            $("#glyph-save").hide()
+        }, 1000);
+    });
+
 
     $("#checkbox-visu").change(function () {
         if (this.checked){
             $("#panel-right").removeClass("panel-default").addClass("panel-danger");
             $("#panel-left").removeClass("panel-primary").addClass("panel-default");
+            var hex = $("#html-color-picker").val();
+            var rgb = hexToRgb(hex);
+            sendManual(true, rgb.r, rgb.g, rgb.b);
         } else {
             $("#panel-left").removeClass("panel-default").addClass("panel-primary");
             $("#panel-right").removeClass("panel-danger").addClass("panel-default");
-        }
+            sendManual(false);
 
-    });
-    $("#checkbox-visu").trigger("change");
+        }
+    }).trigger("change");
 
 
 
     $("#html-color-picker").on("input", function(){
-
-        //TODO select bonne phase si besoin
         syncRGB($(this).val());
     });
 
@@ -148,14 +200,49 @@ $(function() {
     $("#button-picker-ok").click(function () {
         var hex = $("#html-color-picker").val();
         var rgb = hexToRgb(hex);
-        var num_phase = 1;
-        if (num_phase > 0) {
-            $(".r-display[data-phase-number=" + num_phase + "]").html(('000' + rgb.r).substr(-3));
-            $(".g-display[data-phase-number=" + num_phase + "]").html(('000' + rgb.g).substr(-3));
-            $(".b-display[data-phase-number=" + num_phase + "]").html(('000' + rgb.b).substr(-3));
-        }
+        var num_phase = $("#bottom-edit").attr("data-phase-number");
+
+        $(".r-display[data-phase-number=" + num_phase + "]").html(('000' + rgb.r).substr(-3));
+        $(".g-display[data-phase-number=" + num_phase + "]").html(('000' + rgb.g).substr(-3));
+        $(".b-display[data-phase-number=" + num_phase + "]").html(('000' + rgb.b).substr(-3));
+
+        clearEdit();
+    });
+
+
+    $("#button-picker-cancel").click(function () {
+        clearEdit();
     });
 
 
 
+    $("body").on("click", ".button-phase-edit", function () {
+        $(".button-phase-edit").attr("disabled", false);
+        $(this).attr("disabled", true);
+        var num = $(this).attr("data-phase-number");
+
+        $("div.well-phase").each(function() {
+            $(this).removeClass("well-info");
+        });
+
+        $("div.well-phase[data-phase-number=" + num + "]").addClass("well-info");
+
+        var hex = rgbToHex(
+            $(".r-display[data-phase-number=" + num + "]").html(),
+            $(".g-display[data-phase-number=" + num + "]").html(),
+            $(".b-display[data-phase-number=" + num + "]").html());
+        syncRGB(hex);
+
+        $("#strong-num-phase-edit").html(num);
+        $("#bottom-edit").attr("data-phase-number", num).fadeIn();
+
+        $('html, body').animate({
+            scrollTop: $("#panel-right").offset().top
+        }, 500);
+    });
+
+
+
+
+    allowSendManual = true;
 });

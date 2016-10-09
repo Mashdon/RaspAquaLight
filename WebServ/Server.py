@@ -11,7 +11,7 @@ def start_app(_debug=False):
 @app.route('/', methods=['GET'])
 def home():
     phases = get_all_phases()
-    return render_template("home.html", phases=phases)
+    return render_template("home.html", phases=phases, colorManual=[0, 0, 0], isManual=False)
 
 
 @app.route('/StartTest', methods=['POST'])
@@ -31,6 +31,24 @@ def get_all_phases():
 @app.route('/GetNewPhase/<int:_num_phase>', methods=['GET'])
 def get_new_phase(_num_phase):
     return get_phase(_num_phase, fetch=False)
+
+
+@app.route('/SetManual', methods=['POST'])
+def set_manual():
+    isManual = request.form.get("isManual")
+
+    if isManual:
+        _r = request.form.get("r")
+        _g = request.form.get("g")
+        _b = request.form.get("b")
+    return ""
+
+
+@app.route('/SavePhases', methods=['POST'])
+def save_phases():
+    return ""
+
+
 
 
 def get_phase(_num_phase, fetch=True):

@@ -64,7 +64,8 @@
                     <div class="row top10">
                         <div class="col-md-12">
                             <button type="button" class="btn btn-danger" id="button-cancel-phase">Annuler</button>
-                            <button type="button" class="btn btn-success">Sauvegarder</button>
+                            <button type="button" class="btn btn-success" id="button-save-phase">Sauvegarder</button>
+                            <span id="glyph-save" class="glyphicon glyphicon-ok burst-animated text-success"  aria-hidden="true" style="display: none"></span>
                         </div>
 
                     </div>
@@ -91,12 +92,16 @@
                     <div class="input-group">
                         <span class="input-group-addon">Visualiser</span>
                         <input type="checkbox" data-toggle="toggle" class="form-control" id="checkbox-visu" data-onstyle="danger"
-                               data-on='<span class="glyphicon glyphicon-exclamation-sign flash-animated" aria-hidden="true"></span> On' data-off="Off">
+                               data-on='<span class="glyphicon glyphicon-exclamation-sign flash-animated" aria-hidden="true"></span> On' data-off="Off"
+                                {% if isManual %}
+                                    checked
+                                {% endif %}>
 
                     </div>
                     <hr>
 
                     <div class="row">
+                        <span hidden id="span-manual" data-manual-r="{{ colorManual[0] }}" data-manual-g="{{ colorManual[1] }}" data-manual-b="{{ colorManual[2] }}"></span>
                         <div class="col-md-4 col-md-offset-1 square" id="square-visu">
 
                         </div>
@@ -141,17 +146,17 @@
                     </div>
 
 
+                    <div id="bottom-edit" hidden>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-warning" role="alert">Enregistrer pour la phase <strong id="strong-num-phase-edit">1</strong> ?</div>
+                                <button type="button" class="btn btn-danger btn-sm" id="button-picker-cancel">Annuler</button>
+                                <button type="button" class="btn btn-primary btn-sm" id="button-picker-ok">OK</button>
+                            </div>
 
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="alert alert-warning" role="alert">Enregistrer pour la phase <strong>1</strong> ?</div>
-                            <button type="button" class="btn btn-danger btn-sm">Annuler</button>
-                            <button type="button" class="btn btn-primary btn-sm" id="button-picker-ok">OK</button>
                         </div>
-
                     </div>
-
 
                 </div>
             </div>

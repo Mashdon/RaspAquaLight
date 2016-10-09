@@ -10,12 +10,51 @@ def start_app(_debug=False):
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template("home.html")
+    phases = get_all_phases()
+    return render_template("home.html", phases=phases, colorManual=[0, 0, 0], isManual=False)
 
 
-@app.route('/test', methods=['POST'])
-def test():
-    return home()
+@app.route('/StartTest', methods=['POST'])
+def start_test():
+    #TODO action
+    return ""
+
+
+@app.route('/GetAllPhases', methods=['GET'])
+def get_all_phases():
+    phases = ""
+    for i in xrange(1, 5):
+        phases += get_phase(i)
+    return phases
+
+
+@app.route('/GetNewPhase/<int:_num_phase>', methods=['GET'])
+def get_new_phase(_num_phase):
+    return get_phase(_num_phase, fetch=False)
+
+
+@app.route('/SetManual', methods=['POST'])
+def set_manual():
+    isManual = request.form.get("isManual")
+
+    if isManual:
+        _r = request.form.get("r")
+        _g = request.form.get("g")
+        _b = request.form.get("b")
+    return ""
+
+
+@app.route('/SavePhases', methods=['POST'])
+def save_phases():
+    return ""
+
+
+
+
+def get_phase(_num_phase, fetch=True):
+    #TODO fetch informations
+
+    return render_template("phase.html", num_phase=_num_phase)
 
 
 @app.errorhandler(404)

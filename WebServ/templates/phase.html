@@ -1,27 +1,27 @@
-<div class="col-md-12 div-phase" data-phase-number="{{ num_phase }}">
-    <div class="well well-phase" data-phase-number="{{ num_phase }}">
+<div class="col-md-12 div-phase" data-phase-number="{{ phase.num }}">
+    <div class="well well-phase" data-phase-number="{{ phase.num }}">
         <div class="row">
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-danger btn-xs button-remove-phase" data-phase-number="{{ num_phase }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <button type="button" class="btn btn-danger btn-xs button-remove-phase" data-phase-number="{{ phase.num }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
             </div>
 
             <div class="col-md-7">
                 <div class="input-group">
-                    <span class="input-group-addon"><strong class="phase_number">{{ num_phase }}</strong> .</span>
-                    <input type="text" class="form-control" placeholder="Nom de la phase">
-                    <input type="time" class="form-control">
+                    <span class="input-group-addon"><strong class="phase_number">{{ phase.num }}</strong> .</span>
+                    <input type="text" class="form-control" placeholder="Nom de la phase" value="{{ phase.name }}">
+                    <input type="time" class="form-control" value="{{ phase.time }}">
                 </div>
 
             </div>
 
             <div class="col-md-1">
-                <span class="label label-danger r-display" data-phase-number="{{ num_phase }}">000</span>
-                <span class="label label-success g-display" data-phase-number="{{ num_phase }}">000</span>
-                <span class="label label-primary b-display" data-phase-number="{{ num_phase }}">000</span>
+                <span class="label label-danger r-display" data-phase-number="{{ phase.num }}">{{ "%03d" % phase.color[0] }}</span>
+                <span class="label label-success g-display" data-phase-number="{{ phase.num }}">{{ "%03d" % phase.color[1] }}</span>
+                <span class="label label-primary b-display" data-phase-number="{{ phase.num }}">{{ "%03d" % phase.color[2] }}</span>
             </div>
             <div class="col-md-3">
-               <button type="button" class="btn btn-default btn-sm button-phase-edit" data-phase-number="{{ num_phase }}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
+               <button type="button" class="btn btn-default btn-sm button-phase-edit" data-phase-number="{{ phase.num }}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
             </div>
         </div>
     </div>

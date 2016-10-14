@@ -21,7 +21,7 @@ def minute_interval(start, end):
 
     delta = (end.hour - start.hour) * 60 + end.minute - start.minute + (end.second - start.second) / 60.0
     if reverse:
-        delta = 24 * 60 - delta
+        delta = 1440 - delta  # 1440 = 60 * 24
     return delta
 
 

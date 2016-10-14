@@ -45,7 +45,7 @@ def get_new_phase(_num_phase):
 def set_manual():
     isManual = (request.form.get("isManual") == "true")
 
-    rgb = [int(request.form.get("r")), int(request.form.get("g")), int(request.form.get("b"))]
+    rgb = (int(request.form.get("r")), int(request.form.get("g")), int(request.form.get("b")))
 
     model.setManual(isManual, rgb)
 

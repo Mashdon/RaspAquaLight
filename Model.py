@@ -82,8 +82,8 @@ class C_Model:
                 currentTime = datetime.datetime.now().time()
                 for i in xrange(len(self.colorProgram)):
                     iNext = 0 if i == len(self.colorProgram) - 1 else i + 1
-                    if self.colorProgram[i].time <= currentTime < self.colorProgram[iNext].time \
-                            or self.colorProgram[iNext].time < self.colorProgram[i].time <= currentTime:
+                    if self.colorProgram[i].time < currentTime <= self.colorProgram[iNext].time \
+                            or currentTime <= self.colorProgram[iNext].time < self.colorProgram[i].time :
 
                         deltaTimePhase = minute_interval(self.colorProgram[i].time, self.colorProgram[iNext].time)
                         deltaTimeCurrent = minute_interval(self.colorProgram[i].time, currentTime)
@@ -120,8 +120,21 @@ class C_Model:
             self.needSave = True
 
     def savePhases(self, _phases):
-        #TODO traiter
-        return""
+        phases = []
+        for i, p in enumerate(_phases):
+            newP = Phase(i + 1)
+            newP.name = str(p[0])
+            try:
+                newP.time = datetime.datetime.strptime(p[1], '%H:%M').time()
+            except ValueError:
+                newP.time = datetime.datetime.strptime(p[1], '%H:%M:%S').time()
+            newP.color = (int(p[2]), int(p[3]), int(p[4]))
+            phases.append(newP)
+
+        with C_Model.locker:
+            self.colorProgram = deepcopy(tuple(phases))
+
+
 
     def startTest(self, _duration):
         #TODO traiter

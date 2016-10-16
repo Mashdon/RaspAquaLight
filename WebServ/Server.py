@@ -1,5 +1,6 @@
 from flask import *
 from Model import C_Model, Phase
+import json
 app = Flask(__name__)
 
 model = C_Model.getInstance()
@@ -54,6 +55,9 @@ def set_manual():
 
 @app.route('/SavePhases', methods=['POST'])
 def save_phases():
+    nbPhases = int(request.form.get("nbPhases"))
+    phases = [request.form.getlist("phases[" + str(i) + "][]") for i in xrange(nbPhases)]
+    model.savePhases(phases)
     return ""
 
 

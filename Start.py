@@ -1,9 +1,12 @@
+import os
+if not os.path.exists("Data"):
+    os.makedirs("Data")
+
 from WebServ import Server
 from WebServ.WebController import C_WebController
 from Model import C_Model
 from threading import Thread
 from time import sleep
-import os
 
 
 try:
@@ -71,8 +74,6 @@ class C_Launcher(Thread):
                 model.save()
 
 if __name__ == "__main__":
-    if not os.path.exists("Data"):
-        os.makedirs("Data")
 
     controller = C_WebController.getInstance()
 

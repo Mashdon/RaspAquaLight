@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 from flask import *
 from Model import C_Model, Phase
-import json
+
 app = Flask(__name__)
 
 model = C_Model.getInstance()
 
+
 def start_app(_debug=False):
     app.debug = 1 if _debug else 0
     app.run(host="0.0.0.0")
+
 
 @app.route('/', methods=['GET'])
 def home():
@@ -16,7 +18,6 @@ def home():
     colorManual = model.getColorManual()
     isManual = model.getIsManual()
     return render_template("home.html", phases=phases, colorManual=colorManual, isManual=isManual)
-
 
 
 @app.route('/StartTest', methods=['POST'])

@@ -1,6 +1,6 @@
 // Var
 
-allowSendManual = false
+var allowSendManual = false
 /*
 --------------------------
 --------------------------
@@ -20,6 +20,18 @@ function hexToRgb(hex) {
         g: parseInt(result[2], 16),
         b: parseInt(result[3], 16)
     } : null;
+}
+
+function createArray(length) {
+    var arr = new Array(length || 0),
+        i = length;
+
+    if (arguments.length > 1) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        while(i--) arr[length-1 - i] = createArray.apply(this, args);
+    }
+
+    return arr;
 }
 
 function syncRGB(hex) {
@@ -81,11 +93,14 @@ $(function() {
 
     // TEST DE LA PROGRAMATION
     $("#btn-test").click(function(){
-        $('#checkbox-visu').prop('checked', false);
-        $("#checkbox-visu").trigger("change");
 
         var durationTest = $("#number-test").val();
-        if (!isNaN(durationTest)){
+
+        if (!isNaN(durationTest)) {
+            $('#checkbox-visu').prop('checked', false);
+            $("#checkbox-visu").trigger("change");
+
+
             durationTest = Math.abs(parseInt(durationTest));
             $("#btn-test").attr("disabled", true);
 
@@ -98,11 +113,12 @@ $(function() {
                 dataType: 'json'
             });
 
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#btn-test").attr("disabled", false);
             }, (durationTest + 1) * 1000);
 
         }
+
     });
 
     // AJOUT DE PHASE
@@ -155,11 +171,25 @@ $(function() {
     });
 
     $("#button-save-phase").click(function(){
+        var nbPhases = $(".div-phase").length;
+
+        var phases = createArray(nbPhases, 5);
+
+        for(var i = 0; i < nbPhases ; i++){
+            var iNum = i + 1
+            phases[i][0] = $(".input-name-phase[data-phase-number=" + iNum + "]").val();
+            phases[i][1] = $(".input-time-phase[data-phase-number=" + iNum + "]").val();
+            phases[i][2] = $(".r-display[data-phase-number=" + iNum + "]").html();
+            phases[i][3] = $(".g-display[data-phase-number=" + iNum + "]").html();
+            phases[i][4] = $(".b-display[data-phase-number=" + iNum + "]").html();
+        }
+
+        var data = {"nbPhases": nbPhases,"phases": phases};
         $.ajax({
             url: '/SavePhases',
-            data: {},
+            data: data,
             type: 'post',
-            dataType: 'json',
+            //dataType: 'application/json'
         });
 
         $("#glyph-save").show();

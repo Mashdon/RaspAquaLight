@@ -1,6 +1,10 @@
+# -*- coding: utf-8 -*-
 from flask import *
-from WebController import C_WebController
+from Model import C_Model, Phase
+
 app = Flask(__name__)
+
+model = C_Model.getInstance()
 
 
 def start_app(_debug=False):
@@ -11,50 +15,55 @@ def start_app(_debug=False):
 @app.route('/', methods=['GET'])
 def home():
     phases = get_all_phases()
-    return render_template("home.html", phases=phases, colorManual=[0, 0, 0], isManual=False)
+    colorManual = model.getColorManual()
+    isManual = model.getIsManual()
+    return render_template("home.html", phases=phases, colorManual=colorManual, isManual=isManual)
 
 
 @app.route('/StartTest', methods=['POST'])
 def start_test():
-    #TODO action
+    duration = int(request.form.get("duration"))
+    model.startTest(duration)
     return ""
 
 
 @app.route('/GetAllPhases', methods=['GET'])
 def get_all_phases():
-    phases = ""
-    for i in xrange(1, 5):
-        phases += get_phase(i)
-    return phases
+    dataPhases = model.getPhases()
+
+    html_phases = ""
+    for p in dataPhases:
+        html_phases += get_html_phase(p)
+    return html_phases
 
 
 @app.route('/GetNewPhase/<int:_num_phase>', methods=['GET'])
 def get_new_phase(_num_phase):
-    return get_phase(_num_phase, fetch=False)
+    phase = Phase(_num_phase)
+    return get_html_phase(phase)
 
 
 @app.route('/SetManual', methods=['POST'])
 def set_manual():
-    isManual = request.form.get("isManual")
+    isManual = (request.form.get("isManual") == "true")
 
-    if isManual:
-        _r = request.form.get("r")
-        _g = request.form.get("g")
-        _b = request.form.get("b")
+    rgb = (int(request.form.get("r")), int(request.form.get("g")), int(request.form.get("b")))
+
+    model.setManual(isManual, rgb)
+
     return ""
 
 
 @app.route('/SavePhases', methods=['POST'])
 def save_phases():
+    nbPhases = int(request.form.get("nbPhases"))
+    phases = [request.form.getlist("phases[" + str(i) + "][]") for i in xrange(nbPhases)]
+    model.savePhases(phases)
     return ""
 
 
-
-
-def get_phase(_num_phase, fetch=True):
-    #TODO fetch informations
-
-    return render_template("phase.html", num_phase=_num_phase)
+def get_html_phase(phase):
+    return render_template("phase.html", phase=phase)
 
 
 @app.errorhandler(404)

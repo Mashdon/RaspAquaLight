@@ -93,11 +93,14 @@ $(function() {
 
     // TEST DE LA PROGRAMATION
     $("#btn-test").click(function(){
-        $('#checkbox-visu').prop('checked', false);
-        $("#checkbox-visu").trigger("change");
 
         var durationTest = $("#number-test").val();
-        if (!isNaN(durationTest)){
+
+        if (!isNaN(durationTest)) {
+            $('#checkbox-visu').prop('checked', false);
+            $("#checkbox-visu").trigger("change");
+
+
             durationTest = Math.abs(parseInt(durationTest));
             $("#btn-test").attr("disabled", true);
 
@@ -110,11 +113,12 @@ $(function() {
                 dataType: 'json'
             });
 
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#btn-test").attr("disabled", false);
             }, (durationTest + 1) * 1000);
 
         }
+
     });
 
     // AJOUT DE PHASE

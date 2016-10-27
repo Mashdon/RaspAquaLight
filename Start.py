@@ -19,9 +19,9 @@ role_web = 0
 role_led = 1
 role_save = 2
 
-pin_R = 0
-pin_G = 0
-pin_B = 0
+pin_R = 17
+pin_G = 22
+pin_B = 24
 
 
 

@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 import cPickle
 from threading import RLock
 import datetime
 from copy import deepcopy
+import os
 
 
 class Phase:
@@ -19,11 +21,16 @@ def minute_interval(start, end):
         start, end = end, start
         reverse = True
 
-    delta = (end.hour - start.hour) * 60 + end.minute - start.minute + (end.second - start.second) / 60.0
-    if reverse:
-        delta = 1440 - delta  # 1440 = 60 * 24
-    return delta
+    delta = (end.hour - start.hour) * 60 \
+        + end.minute - start.minute \
+        + (end.second - start.second) / 60.0 \
+        + (end.microsecond - start.microsecond) / (60 * 1e6)
 
+    # 1440 = 60 * 24
+    return 1440 - delta if reverse else delta
+
+refreshBase = 1
+refreshTest = 0.05
 
 class C_Model:
 
@@ -41,10 +48,13 @@ class C_Model:
 
     def __init__(self):
         self.colorProgram = [Phase(1), Phase(2), Phase(3)]
-        self.isManual = True
+        self.isManual = False
         self.colorManual = (0, 0, 0)
-        self.isTest = False
         self.needSave = False
+        self.isTest = False
+        self.durationTest = 0
+        self.beginTest = None
+        self.refreshRate = refreshBase
 
     ############################################################################
 
@@ -56,6 +66,8 @@ class C_Model:
                 f.close()
                 self.__dict__.update(tmp_dict)
             except IOError:
+                if not os.path.exists("Data"):
+                    os.makedirs("Data")
                 self.save()
 
     def save(self):
@@ -64,6 +76,7 @@ class C_Model:
             cPickle.dump(self.__dict__, f, 2)
             f.close()
             self.needSave = False
+        print "*** File Saved"
 
     ############################################################################
 
@@ -75,18 +88,35 @@ class C_Model:
             if self.isManual:
                 colorToSend = deepcopy(self.colorManual)
 
-            elif self.isTest:
-                print "Not implemented !"
-
             else:
-                currentTime = datetime.datetime.now().time()
+                currentTimeToDisplay = datetime.datetime.now().time()
+
+                if self.isTest:
+                    progress = minute_interval(self.beginTest, currentTimeToDisplay)
+                    globalPercentage = progress / self.durationTest
+                    if globalPercentage >= 1:
+                        self.stopTest()
+                    else:
+
+                        newTimeSeconds = int(globalPercentage * 86400)  # 86400 seconds in 24h
+
+                        newTimeMinutes = int(newTimeSeconds / 60)
+                        newTimeHours = int(newTimeMinutes / 60)
+
+                        newTimeSeconds = int(newTimeSeconds % 60)
+                        newTimeMinutes = int(newTimeMinutes % 60)
+
+                        currentTimeToDisplay = datetime.time(hour=newTimeHours, minute=newTimeMinutes, second=newTimeSeconds)
+
                 for i in xrange(len(self.colorProgram)):
                     iNext = 0 if i == len(self.colorProgram) - 1 else i + 1
-                    if self.colorProgram[i].time < currentTime <= self.colorProgram[iNext].time \
-                            or currentTime <= self.colorProgram[iNext].time < self.colorProgram[i].time :
+                    if self.colorProgram[i].time < currentTimeToDisplay <= self.colorProgram[iNext].time \
+                            or currentTimeToDisplay <= self.colorProgram[iNext].time < self.colorProgram[i].time \
+                            or self.colorProgram[iNext].time < self.colorProgram[i].time <= currentTimeToDisplay:
 
                         deltaTimePhase = minute_interval(self.colorProgram[i].time, self.colorProgram[iNext].time)
-                        deltaTimeCurrent = minute_interval(self.colorProgram[i].time, currentTime)
+                        deltaTimeCurrent = minute_interval(self.colorProgram[i].time, currentTimeToDisplay)
+
 
                         percentageDone = deltaTimeCurrent / float(deltaTimePhase)
 
@@ -107,6 +137,9 @@ class C_Model:
     def getPhases(self):
         return self.sendSafe(self.colorProgram)
 
+    def getRefreshRate(self):
+        return self.sendSafe(self.refreshRate)
+
     def getColorManual(self):
         return self.sendSafe(self.colorManual)
 
@@ -123,7 +156,7 @@ class C_Model:
         phases = []
         for i, p in enumerate(_phases):
             newP = Phase(i + 1)
-            newP.name = str(p[0])
+            newP.name = str(p[0].encode("utf-8"))
             try:
                 newP.time = datetime.datetime.strptime(p[1], '%H:%M').time()
             except ValueError:
@@ -133,12 +166,22 @@ class C_Model:
 
         with C_Model.locker:
             self.colorProgram = deepcopy(tuple(phases))
-
-
+            self.needSave = True
 
     def startTest(self, _duration):
-        #TODO traiter
-        return ""
+        with C_Model.locker:
+            self.durationTest = (_duration / 60.0) + 1e-5  # in minutes
+            self.beginTest = datetime.datetime.now().time()
+            self.refreshRate = refreshTest
+            self.isTest = True
+
+
+    def stopTest(self):
+        with C_Model.locker:
+            self.refreshRate = refreshBase
+            self.isTest = False
+
+
 
 
 

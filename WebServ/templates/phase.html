@@ -9,7 +9,7 @@
             <div class="col-md-7">
                 <div class="input-group">
                     <span class="input-group-addon"><strong class="phase_number">{{ phase.num }}</strong> .</span>
-                    <input type="text" class="form-control input-name-phase" placeholder="Nom de la phase" value="{{ phase.name }}" data-phase-number="{{ phase.num }}">
+                    <input type="text" class="form-control input-name-phase" placeholder="Nom de la phase" value="{{ phase.name.decode('utf-8') }}" data-phase-number="{{ phase.num }}">
                     <input type="time" class="form-control input-time-phase" value="{{ phase.time }}" data-phase-number="{{ phase.num }}">
                 </div>
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import *
 from Model import C_Model, Phase
 import json
@@ -8,7 +9,6 @@ model = C_Model.getInstance()
 def start_app(_debug=False):
     app.debug = 1 if _debug else 0
     app.run(host="0.0.0.0")
-
 
 @app.route('/', methods=['GET'])
 def home():
@@ -21,7 +21,7 @@ def home():
 
 @app.route('/StartTest', methods=['POST'])
 def start_test():
-    duration = request.form.get("duration")
+    duration = int(request.form.get("duration"))
     model.startTest(duration)
     return ""
 

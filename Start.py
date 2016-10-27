@@ -1,7 +1,4 @@
-import os
-if not os.path.exists("Data"):
-    os.makedirs("Data")
-
+# -*- coding: utf-8 -*-
 from WebServ import Server
 from WebServ.WebController import C_WebController
 from Model import C_Model
@@ -26,8 +23,6 @@ pin_R = 0
 pin_G = 0
 pin_B = 0
 
-delayProd = 1
-delayDev = 1
 
 
 class C_Launcher(Thread):
@@ -52,9 +47,9 @@ class C_Launcher(Thread):
 
     def StartLED(self):
         model = C_Model.getInstance()
-        timetoSleep = delayProd if prod else delayDev
         while True:
-            sleep(timetoSleep)
+            timeToSleep = model.getRefreshRate()
+            sleep(timeToSleep)
             color = model.getRGBToDisplay()
 
             if prod:

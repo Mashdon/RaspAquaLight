@@ -65,6 +65,7 @@ class C_Model:
                 tmp_dict = cPickle.load(f)
                 f.close()
                 self.__dict__.update(tmp_dict)
+                self.needSave = False
             except IOError:
                 if not os.path.exists("Data"):
                     os.makedirs("Data")

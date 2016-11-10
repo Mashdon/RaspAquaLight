@@ -78,6 +78,35 @@ function clearEdit(){
     $("#bottom-edit").removeAttr("data-phase-number").fadeOut();
 }
 
+function clearUpDownButtons(){
+    $(".button-phase-down").attr("disabled", false);
+    $(".button-phase-up").attr("disabled", false);
+
+    var nb_phases = $(".div-phase").length;
+    $(".button-phase-up[data-phase-number=1]").attr("disabled", true);
+    $(".button-phase-down[data-phase-number=" + nb_phases + "]").attr("disabled", true);
+}
+
+function changePlacePhase(oldNumber, newNumber){
+    if (oldNumber == $("#bottom-edit").attr("data-phase-number")){
+        $("#bottom-edit").attr("data-phase-number", newNumber);
+        $("#strong-num-phase-edit").html(newNumber);
+    }
+
+    $("[data-phase-number=" + oldNumber +"]").attr("data-phase-number", "x");
+    $("[data-phase-number=" + newNumber +"]").attr("data-phase-number", oldNumber);
+    $("[data-phase-number=x]").attr("data-phase-number", newNumber);
+
+    $(".phase_number[data-phase-number=" + newNumber +"]").html(newNumber);
+    $(".phase_number[data-phase-number=" + oldNumber +"]").html(oldNumber);
+
+    if (oldNumber < newNumber){ //down
+        $(".div-phase[data-phase-number=" + newNumber +"]").before($(".div-phase[data-phase-number=" + oldNumber +"]"));
+    } else {
+        $(".div-phase[data-phase-number=" + newNumber +"]").after($(".div-phase[data-phase-number=" + oldNumber +"]"));
+    }
+}
+
 /*
 --------------------------
 --------------------------
@@ -89,6 +118,8 @@ $(function() {
         $("#span-manual").attr("data-manual-r"),
         $("#span-manual").attr("data-manual-g"),
         $("#span-manual").attr("data-manual-b")));
+
+    clearUpDownButtons();
 
 
     // TEST DE LA PROGRAMATION
@@ -159,12 +190,27 @@ $(function() {
     });
 
 
+    $('body').on("click", ".button-phase-up", function (){
+        var num = parseInt($(this).attr("data-phase-number"));
+        changePlacePhase(num, num - 1);
+        clearUpDownButtons();
+    });
+
+    $('body').on("click", ".button-phase-down", function (){
+        var num = parseInt($(this).attr("data-phase-number"));
+        changePlacePhase(num, num + 1);
+        clearUpDownButtons();
+    });
+
+
     $("#button-cancel-phase").click(function () {
         $.ajax({
             url: '/GetAllPhases',
             type: 'get',
             success: function (response) {
                 $("#phases").html(response);
+                clearUpDownButtons();
+                clearEdit();
             },
             async: false
         });
@@ -275,4 +321,5 @@ $(function() {
 
 
     allowSendManual = true;
+
 });

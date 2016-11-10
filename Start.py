@@ -53,11 +53,12 @@ class C_Launcher(Thread):
             color = model.getRGBToDisplay()
 
             if prod:
-                pi.set_PWM_dutycycle(pin_R, color[0])
-                pi.set_PWM_dutycycle(pin_G, color[1])
-                pi.set_PWM_dutycycle(pin_B, color[2])
+                self.pi.set_PWM_dutycycle(pin_R, color[0])
+                self.pi.set_PWM_dutycycle(pin_G, color[1])
+                self.pi.set_PWM_dutycycle(pin_B, color[2])
             else:
-                print "Color Displayed : " + str(color)
+                #print "Color Displayed : " + str(color)
+                pass
 
 
 

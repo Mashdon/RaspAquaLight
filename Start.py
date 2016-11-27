@@ -4,16 +4,13 @@ from WebServ.WebController import C_WebController
 from Model import C_Model
 from threading import Thread
 from time import sleep
+import os
 
 
-try:
-    import pigpio
-    print " ******************* In Production !"
-    prod = True
-
-except ImportError:
-    print " ******************* Dev-only"
+if os.name == "nt":
     prod = False
+else:
+    prod = True
 
 role_web = 0
 role_led = 1
@@ -27,10 +24,9 @@ pin_B = 24
 
 class C_Launcher(Thread):
 
-    def __init__(self, _role, _pi=None):
+    def __init__(self, _role):
         Thread.__init__(self)
         self.role = _role
-        self.pi = _pi
 
     def run(self):
         if self.role == role_web:
@@ -53,9 +49,10 @@ class C_Launcher(Thread):
             color = model.getRGBToDisplay()
 
             if prod:
-                self.pi.set_PWM_dutycycle(pin_R, color[0])
-                self.pi.set_PWM_dutycycle(pin_G, color[1])
-                self.pi.set_PWM_dutycycle(pin_B, color[2])
+                cmd = "echo '" + str(pin_R) + "=" + str(color[0]) + "' > /dev/pi-blaster;"
+                cmd += "echo '" + str(pin_G) + "=" + str(color[1]) + "' > /dev/pi-blaster;"
+                cmd += "echo '" + str(pin_B) + "=" + str(color[2]) + "' > /dev/pi-blaster;"
+                os.system(cmd)
             else:
                 #print "Color Displayed : " + str(color)
                 pass
@@ -73,10 +70,8 @@ if __name__ == "__main__":
 
     controller = C_WebController.getInstance()
 
-    pi = pigpio.pi() if prod else None
-
     ThreadWeb = C_Launcher(role_web)
-    ThreadLED = C_Launcher(role_led, pi)
+    ThreadLED = C_Launcher(role_led)
     ThreadSave = C_Launcher(role_save)
 
     ThreadWeb.start()

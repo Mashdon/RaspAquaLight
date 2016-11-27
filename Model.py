@@ -30,7 +30,7 @@ def minute_interval(start, end):
     return 1440 - delta if reverse else delta
 
 refreshBase = 1
-refreshTest = 0.05
+refreshTest = 0.2
 
 class C_Model:
 

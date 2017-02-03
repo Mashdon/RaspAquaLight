@@ -49,9 +49,9 @@ class C_Launcher(Thread):
             color = model.getRGBToDisplay()
 
             if prod:
-                cmd = "echo '" + str(pin_R) + "=" + str(color[0]) + "' > /dev/pi-blaster;"
-                cmd += "echo '" + str(pin_G) + "=" + str(color[1]) + "' > /dev/pi-blaster;"
-                cmd += "echo '" + str(pin_B) + "=" + str(color[2]) + "' > /dev/pi-blaster;"
+                cmd = "echo '%d=%d' > /dev/pi-blaster;" % pin_R, color[0]
+                cmd += "echo '%d=%d' > /dev/pi-blaster;" % pin_G, color[1]
+                cmd += "echo '%d=%d' > /dev/pi-blaster;" % pin_B, color[2]
                 os.system(cmd)
             else:
                 #print "Color Displayed : " + str(color)

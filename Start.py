@@ -42,19 +42,23 @@ class C_Launcher(Thread):
         Server.start_app(_debug=False)
 
     def StartLED(self):
+        precColor = None
         model = C_Model.getInstance()
         while True:
             timeToSleep = model.getRefreshRate()
             sleep(timeToSleep)
             color = model.getRGBToDisplay()
-
+            if precColor == color:
+                continue
+                
+            precColor = color
             if prod:
                 cmd = "echo '%d=%d' > /dev/pi-blaster;" % pin_R, color[0]
                 cmd += "echo '%d=%d' > /dev/pi-blaster;" % pin_G, color[1]
                 cmd += "echo '%d=%d' > /dev/pi-blaster;" % pin_B, color[2]
                 os.system(cmd)
             else:
-                #print "Color Displayed : " + str(color)
+                print "Color Displayed : " + str(color)
                 pass
 
 
